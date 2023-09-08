@@ -1,0 +1,1 @@
+/usr/lib64/ccache/c++   -rdynamic -O3 -g -std=c++11 -Wall -Wno-deprecated -Werror -Wno-unused-function   CMakeFiles/test.dir/tests/test.cpp.o  -o ../bin/test -Wl,-rpath,/home/ConstantineQAQ/workspace/webserver/lib -rdynamic ../lib/libconstantineQAQ.so 

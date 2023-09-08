@@ -1,0 +1,34 @@
+#IncludeRegexLine: ^[ 	]*#[ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/ConstantineQAQ/workspace/webserver/include/log.h
+string
+-
+stdint.h
+-
+memory
+-
+list
+-
+fstream
+-
+vector
+-
+sstream
+-
+iostream
+-
+functional
+-
+map
+-
+
+/home/ConstantineQAQ/workspace/webserver/src/log.cpp
+../include/log.h
+/home/ConstantineQAQ/workspace/webserver/include/log.h
+
