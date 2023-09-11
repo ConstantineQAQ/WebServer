@@ -30,3 +30,12 @@
 *.exe
 *.out
 *.app
+
+# IDE files
+*.ipr
+*.iws
+*.iml
+.idea/
+*.sln
+*.suo
+*.vscode
