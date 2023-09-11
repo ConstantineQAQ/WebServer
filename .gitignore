@@ -39,3 +39,6 @@
 *.sln
 *.suo
 *.vscode
+
+/build
+/lib
