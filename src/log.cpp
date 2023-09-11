@@ -2,15 +2,36 @@
 
 namespace ConstantineQAQ{
 
-    // %m -- 消息体
-    // %p -- level
-    // %r -- 启动后的时间
-    // %c -- 日志名称
-    // %t -- 线程id
-    // %n -- 回车换行
-    // %d -- 时间
-    // %f -- 文件名
-    // %l -- 行号
+LogEvent::LogEvent(std::shared_ptr<Logger> logger, LogLevel::Level level, const char *file, int32_t line, uint32_t elapse, 
+                                    uint32_t threadId, uint32_t fiberId, uint64_t time)
+                                    :m_level(level)
+                                    ,m_logger(logger)
+                                    ,m_file(file)
+                                    ,m_line(line)
+                                    ,m_elapse(elapse)
+                                    ,m_threadId(threadId)
+                                    ,m_fiberId(fiberId)
+                                    ,m_time(time)
+                                    {
+                                    }
+
+void LogEvent::format(const char* fmt, ...) {
+	//va_start、va_end成对出现
+    va_list al;  //val_list 用于获取不确定个数的参数
+    va_start(al, fmt);
+    format(fmt, al);
+    va_end(al);
+}
+
+/** 将内容都添加到m_ss中 */
+void LogEvent::format(const char* fmt, va_list al) {
+    char* buf = nullptr;
+    int len = vasprintf(&buf, fmt, al);
+    if(len != -1) {
+        m_ss << std::string(buf, len);
+        free(buf);
+    }
+}
 
 class MessageFormatItem : public LogFormatter::FormatItem{
 public:
@@ -66,16 +87,23 @@ public:
     }
 };
 
-class DateTimeFormatItem : public LogFormatter::FormatItem{
+/** [%d] 时间 */
+class DateTimeFormatItem : public LogFormatter::FormatItem {
 public:
-    DateTimeFormatItem(const std::string& format = "%Y-%m-%d %H:%M:%S") : m_format(format){
+    DateTimeFormatItem(const std::string& format = "%Y-%m-%d %H:%M:%S")
+        :m_format(format) {
+        if(m_format.empty()) {
+            m_format = "%Y-%m-%d %H:%M:%S";
+        }
     }
-    void format(std::ostream& os,std::shared_ptr<Logger> logger, LogLevel::Level level, LogEvent::ptr event) override
-    {
+
+    void format(std::ostream& os, Logger::ptr logger, LogLevel::Level level, LogEvent::ptr event) override {
         struct tm tm;
         time_t time = event->getTime();
+		//localtime_r 用于linux平台下获取系统时间
         localtime_r(&time, &tm);
         char buf[64];
+		//strftime 根据format中定义的格式化规则，格式化结构tm表示的时间，并把它存储在buf中。
         strftime(buf, sizeof(buf), m_format.c_str(), &tm);
         os << buf;
     }
@@ -149,8 +177,20 @@ const char* LogLevel::ToString(LogLevel::Level level) {
     return "UNKNOW";
 }
 
+    // %m -- 消息体
+    // %p -- level
+    // %r -- 启动后的时间
+    // %c -- 日志名称
+    // %t -- 线程id
+    // %n -- 回车换行
+    // %d -- 时间
+    // %f -- 文件名
+    // %l -- 行号
+    // %T -- 制表符
+    // %F -- 协程id
+
 Logger::Logger(const std::string &name):m_name(name),m_level(LogLevel::DEBUG) {
-    m_formatter.reset(new LogFormatter("%d [%p] %f %l %m %n"));
+    m_formatter.reset(new LogFormatter("%d{%Y-%m-%d %H:%M:%S}%T%t%T%N%T%F%T[%p]%T[%c]%T%f:%l%T%m%n"));
 }
 void Logger::Log(LogLevel::Level level, LogEvent::ptr event)
 {
@@ -203,7 +243,9 @@ void Logger::delAppender(LogAppender::ptr appender)
     }
 }
 
-FileLogAppender::FileLogAppender(const std::string &filename) : m_filename(filename){}
+FileLogAppender::FileLogAppender(const std::string &filename) : m_filename(filename){
+    reopen(); // 打开文件
+}
 void FileLogAppender::Log(Logger::ptr logger, LogLevel::Level level, LogEvent::ptr event)
 {
     if(level >= m_level)
@@ -350,9 +392,28 @@ void LogFormatter::init() {
 		}
     }
 }
+
+LogEventWrap::LogEventWrap(LogEvent::ptr e) : m_event(e){
 }
-ConstantineQAQ::LogEvent::LogEvent(const char *line, int32_t m_line, uint32_t elapse, 
-                                    uint32_t threadId, uint32_t fiberId, uint64_t time)
-                                    :m_line(m_line), m_elapse(elapse), m_threadId(threadId),
-                                    m_fiberId(fiberId), m_time(time), m_ss(line){
+
+LogEventWrap::~LogEventWrap()
+{
+    m_event->getLogger()->Log(m_event->getLevel(), m_event);
+}
+std::stringstream &LogEventWrap::getSS()
+{
+    return m_event->getSS();
+    // TODO: 在此处插入 return 语句
+}
+LoggerManager::LoggerManager(){
+    m_root.reset(new Logger);
+    m_root->addAppender(LogAppender::ptr(new StdoutLogAppender));
+    m_loggers[m_root->getName()] = m_root;
+}
+
+Logger::ptr LoggerManager::getLogger(const std::string &name)
+{
+    auto it = m_loggers.find(name);
+    return it == m_loggers.end() ? m_root : it->second;
+}
 }

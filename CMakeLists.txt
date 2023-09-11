@@ -6,6 +6,7 @@ set(CMAKE_CXX_FLAGS "-rdynamic -O3 -g -std=c++11 -Wall -Wno-deprecated -Werror -
 
 set(LIB_SRC
     src/log.cpp
+    src/util.cpp
     )
 
 add_library(constantineQAQ SHARED ${LIB_SRC})

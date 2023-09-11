@@ -1,4 +1,0 @@
-/home/ConstantineQAQ/workspace/webserver/build/CMakeFiles/rebuild_cache.dir
-/home/ConstantineQAQ/workspace/webserver/build/CMakeFiles/edit_cache.dir
-/home/ConstantineQAQ/workspace/webserver/build/CMakeFiles/test.dir
-/home/ConstantineQAQ/workspace/webserver/build/CMakeFiles/constantineQAQ.dir
