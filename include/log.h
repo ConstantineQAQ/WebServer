@@ -45,23 +45,31 @@
     namespace ConstantineQAQ{
     class Logger;
 
-    // 日志级别
     class LogLevel{
     public:
-        enum Level{
+        enum Level {
+            /// 未知级别
             UNKNOW = 0,
+            /// DEBUG: 记录有关通过系统的流量的详细信息，应用程序记录的大多数为 DEBUG；
             DEBUG = 1,
+            /// INFO：运行时事件（启动/关闭）；
             INFO = 2,
+            /// WARN：使用已弃用的 API、API 使用不当、“几乎”错误、其他不合需要或意外但不一定“错误”的运行时情况；
             WARN = 3,
+            /// ERROR：其他运行时错误或意外情况
             ERROR = 4,
+            /// FATAL：导致提前终止的严重错误
             FATAL = 5
         };
-
+        /** Level转字符串 */ 
         static const char* ToString(LogLevel::Level level);
+        /** 字符串转Level */
         static LogLevel::Level FromString(const std::string& str);
     };
 
-    // 日志事件
+
+
+    // 获取和设置日志事件（文件名、行号、启动时间、线程、协程、时间戳、线程名称、日志内容、日志器、日志等级）
     class LogEvent{
     public:
         typedef std::shared_ptr<LogEvent> ptr;
@@ -92,7 +100,7 @@
         uint32_t m_threadId = 0;        // 线程id
         uint32_t m_fiberId = 0;         // 协程id
         uint64_t m_time = 0;            // 时间戳
-        std::stringstream m_ss;          // 日志内容
+        std::stringstream m_ss;          // 日志内容流
     };
 
     class LogEventWrap{

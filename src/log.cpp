@@ -190,7 +190,7 @@ const char* LogLevel::ToString(LogLevel::Level level) {
     // %F -- 协程id
 
 Logger::Logger(const std::string &name):m_name(name),m_level(LogLevel::DEBUG) {
-    m_formatter.reset(new LogFormatter("%d{%Y-%m-%d %H:%M:%S}%T%t%T%N%T%F%T[%p]%T[%c]%T%f:%l%T%m%n"));
+    m_formatter.reset(new LogFormatter("%d{%Y-%m-%d %H:%M:%S}%T%t%T%F%T[%p]%T[%c]%T%f:%l%T%m%n"));
 }
 void Logger::Log(LogLevel::Level level, LogEvent::ptr event)
 {
@@ -403,7 +403,6 @@ LogEventWrap::~LogEventWrap()
 std::stringstream &LogEventWrap::getSS()
 {
     return m_event->getSS();
-    // TODO: 在此处插入 return 语句
 }
 LoggerManager::LoggerManager(){
     m_root.reset(new Logger);

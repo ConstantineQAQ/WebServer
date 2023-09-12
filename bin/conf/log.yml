@@ -20,3 +20,14 @@ system:
   int_vec:
     - 10
     - 30
+  int_list: [20, 40, 50]
+  int_set: [30, 20 ,20]
+  int_unordered_set: [30,30,40,20,10,20]
+  str_int_map:
+    k: 30
+    k2: 40
+    k3: 50
+  str_int_unordered_map:
+    k: 100000
+    v: 111
+    w: 212
