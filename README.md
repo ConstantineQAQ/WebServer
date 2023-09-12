@@ -50,7 +50,9 @@ class ConfigVar;
 template<F,T>
 LexicalCast;
 
-//容器片特化，目前支持vector
+//容器片特化，支持vector,list,set,unordered_set
+// map,unordered_map 支持key = std::string的片特化
+// Config::Lookup(key) , key相同，但是类型不同的，不会报错，这是一个问题
 ```
 
 ## 3.协程库的封装
