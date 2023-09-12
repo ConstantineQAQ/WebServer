@@ -1,0 +1,3 @@
+2023-09-11 20:29:25	14249	<<error_format %N>>	0	[INFO]	[root]	/home/ConstantineQAQ/workspace/webserver/tests/test.cpp:36	xsadadadasdxx
+2023-09-11 20:29:25	14249	<<error_format %N>>	0	[DEBUG]	[root]	/home/ConstantineQAQ/workspace/webserver/tests/test.cpp:37	xsadadadasdxx
+2023-09-11 20:29:25	14249	<<error_format %N>>	0	[INFO]	[root]	/home/ConstantineQAQ/workspace/webserver/tests/test.cpp:38	xsadadadasdyy

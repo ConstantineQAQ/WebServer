@@ -31,10 +31,8 @@ int main(){
 
     auto l = ConstantineQAQ::LoggerMgr::GetInstance()->getLogger("xx");
     auto l2 = ConstantineQAQ::LoggerMgr::GetInstance()->getLogger("yy");
-    std::cout << l->getName() << std::endl;
-    std::cout << l->getLevel() << std::endl;
-    std::cout << l2->getName() << std::endl;
-    std::cout << l2->getLevel() << std::endl;
+    ConstantineQAQ::FileLogAppender::ptr file_appender_info(new ConstantineQAQ::FileLogAppender("./info_log.txt"));
+    l->addAppender(file_appender_info);
     CONSTANTINEQAQ_LOG_INFO(l) << "xsadadadasdxx";
     CONSTANTINEQAQ_LOG_DEBUG(l) << "xsadadadasdxx";
     CONSTANTINEQAQ_LOG_INFO(l2) << "xsadadadasdyy";

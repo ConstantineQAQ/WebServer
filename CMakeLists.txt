@@ -4,10 +4,16 @@ project(ConstantineQAQ)
 set(CMAKE_VERBOSE_MAKEFILE ON)
 set(CMAKE_CXX_FLAGS "-rdynamic -O3 -g -std=c++11 -Wall -Wno-deprecated -Werror -Wno-unused-function")
 
+include_directories(.)
+
 set(LIB_SRC
     src/log.cpp
     src/util.cpp
+    src/config.cpp
     )
+
+find_package(Boost REQUIRED)
+include_directories(${Boost_INCLUDE_DIRS})
 
 add_library(constantineQAQ SHARED ${LIB_SRC})
 #add_library(constantineQAQ_static STATIC ${LIB_SRC})
@@ -15,7 +21,12 @@ add_library(constantineQAQ SHARED ${LIB_SRC})
 
 add_executable(test tests/test.cpp)
 add_dependencies(test constantineQAQ)
-target_link_libraries(test constantineQAQ)
+target_link_libraries(test constantineQAQ yaml-cpp)
+
+add_executable(test_config tests/test_config.cpp)
+add_dependencies(test_config constantineQAQ)
+target_link_libraries(test_config constantineQAQ yaml-cpp)
+
 
 SET(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/lib)
 SET(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/bin)

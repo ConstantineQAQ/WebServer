@@ -13,6 +13,7 @@
     #include <time.h>
     #include <map>
     #include <stdarg.h>
+    #include "util.h"
     #include "singleton.h"
 
     #define CONSTANTINEQAQ_LOG_LEVEL(logger, level) \
@@ -38,6 +39,8 @@
     #define CONSTANTINEQAQ_LOG_FMT_WARN(logger, fmt, ...) CONSTANTINEQAQ_LOG_FMT_LEVEL(logger, ConstantineQAQ::LogLevel::WARN, fmt, __VA_ARGS__)
     #define CONSTANTINEQAQ_LOG_FMT_ERROR(logger, fmt, ...) CONSTANTINEQAQ_LOG_FMT_LEVEL(logger, ConstantineQAQ::LogLevel::ERROR, fmt, __VA_ARGS__)
     #define CONSTANTINEQAQ_LOG_FMT_FATAL(logger, fmt, ...) CONSTANTINEQAQ_LOG_FMT_LEVEL(logger, ConstantineQAQ::LogLevel::FATAL, fmt, __VA_ARGS__)
+
+    #define CONSTANTINEQAQ_LOG_ROOT() ConstantineQAQ::LoggerMgr::GetInstance()->getRoot()
 
     namespace ConstantineQAQ{
     class Logger;
@@ -232,7 +235,8 @@
     };
 
     typedef ConstantineQAQ::Singleton<LoggerManager> LoggerMgr;
-    
+
+
     }
 
     #endif

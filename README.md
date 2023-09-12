@@ -24,14 +24,43 @@ tests -- 测试代码
        |
     Appender(日志输出位置)
 
-## 2.协程库的封装
+## 2.配置系统
+Config --> Yaml
+
+Yaml-cpp : github.com/jbeder/yaml-cpp
+
+```cpp
+YAML::Node node = YAML::LoadFile("config.yaml");
+node.IsMap();
+for(auto it = node.begin(); it != node.end(); ++it) {
+}
+
+node.IsSequence();
+for(size_t i = 0; i < node.size(); ++i) {
+}
+
+node.IsScalar();
+```
+配置系统的原则，约定优于配置，配置文件的格式要简单，易于阅读，易于修改
+
+```cpp
+template<T, FromStr, ToStr>
+class ConfigVar;
+
+template<F,T>
+LexicalCast;
+
+//容器片特化，目前支持vector
+```
+
+## 3.协程库的封装
 将异步的操作封装成协程，使用协程的方式来进行异步操作
 
-## 3.socket函数库的开发
+## 4.socket函数库的开发
 
-## 4.http协议的开发
+## 5.http协议的开发
 
-## 5.分布式协议
+## 6.分布式协议
 逻辑业务分离，将业务逻辑分离到不同的服务器上，通过分布式协议来进行通信，将业务功能和系统功能分割开来，提高系统的可扩展性和可维护性
 
-## 6.推荐系统
+## 7.推荐系统
