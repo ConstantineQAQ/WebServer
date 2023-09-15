@@ -50,10 +50,15 @@ class ConfigVar;
 template<F,T>
 LexicalCast;
 
-//容器片特化，支持vector,list,set,unordered_set
+// 容器片特化，支持vector,list,set,unordered_set
 // map,unordered_map 支持key = std::string的片特化
 // Config::Lookup(key) , key相同，但是类型不同的，不会报错，这是一个问题
 ```
+
+自定义类型，需要实现ConstantineQAQ::LexicalCast<T, std::string>的片特化，实现后，就可以支持Config解析自定义类型，自定义类型可以和常规STL容器一起使用
+
+配置的事件机制
+当一个配置项发生修改的时候，可以反向通知对应的代码，回调
 
 ## 3.协程库的封装
 将异步的操作封装成协程，使用协程的方式来进行异步操作
