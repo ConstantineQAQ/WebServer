@@ -13,6 +13,7 @@
 #include <set>
 #include <unordered_map>
 #include <unordered_set>
+#include <functional>
 
 
 namespace ConstantineQAQ{
@@ -32,6 +33,7 @@ public:
 
     virtual std::string toString() = 0;
     virtual bool fromString(const std::string& val) = 0;
+    virtual std::string getTypeName() const = 0;
 protected:
     std::string m_name;
     std::string m_description;
@@ -46,7 +48,10 @@ public:
     }
 };
 
-// string转vector特化
+/**
+ * @brief 类型转换模板类片特化(YAML String 转换成 std::vector<T>)
+ */
+
 template <class T>
 class LexicalCast<std::string,std::vector<T>> {
 public:
@@ -63,7 +68,10 @@ public:
     }
 };
 
-// vector转string特化
+/**
+ * @brief 类型转换模板类片特化(std::vector<T> 转换成 YAML String)
+ */
+
 template <class T>
 class LexicalCast<std::vector<T>,std::string> {
 public:
@@ -245,6 +253,7 @@ template<class T, class FromStr = LexicalCast<std::string, T>
 class ConfigVar : public ConfigVarBase{
 public:
     typedef std::shared_ptr<ConfigVar> ptr;
+    typedef std::function<void(const T& old_value, const T& new_value)> on_change_cb;
 
     ConfigVar(const std::string& name
             , const T& default_value
@@ -258,8 +267,8 @@ public:
             // return boost::lexical_cast<std::string>(m_val);
             return ToStr()(m_val);
         }catch(std::exception& e){
-            CONSTANTINEQAQ_LOG_ERROR(CONSTANTINEQAQ_LOG_ROOT()) << "ConfigVar::toString exception"
-                << e.what() << " convert: " << typeid(m_val).name() << " to string";
+            CONSTANTINEQAQ_LOG_ERROR(CONSTANTINEQAQ_LOG_ROOT()) << "ConfigVar::toString exception "
+                << e.what() << " convert: " << typeid(T).name() << " to string " << "name= " << m_name;
         }
         return "";
     }
@@ -276,9 +285,38 @@ public:
     }
 
     const T getValue() const { return m_val; }
-    void setValue(const T& v) { m_val = v; }
+    // 赋值
+    void setValue(const T& v) { 
+        if(v == m_val){
+            return;
+        }
+        for(auto& i : m_cbs){
+            i.second(m_val, v);
+        }
+        m_val = v;
+    }
+    std::string getTypeName() const { return typeid(T).name(); }
+
+    void addListener(uint64_t key, on_change_cb cb){
+        m_cbs[key] = cb;
+    }
+
+    void delListener(uint64_t key){
+        m_cbs.erase(key);
+    }
+
+    void clearListener(){
+        m_cbs.clear();
+    }
+
+    on_change_cb getListener(uint64_t key){
+        auto it = m_cbs.find(key);
+        return it == m_cbs.end() ? nullptr : it->second;
+    }
 private:
     T m_val;
+    // 变更回调函数组，uint64_t key要求唯一，一般可以使用hash
+    std::map<uint64_t, on_change_cb> m_cbs;
 };
 
 class Config{
@@ -297,7 +335,7 @@ public:
                 return tmp;
             }else{
                 CONSTANTINEQAQ_LOG_ERROR(CONSTANTINEQAQ_LOG_ROOT()) << "Lookup name = " << name << " exists but type not "
-                    << typeid(T).name() << " real_type = " << it->second->getName()
+                    << typeid(T).name() << " real_type = " << it->second->getTypeName()
                     << " " << it->second->toString();
                 return nullptr;
             }

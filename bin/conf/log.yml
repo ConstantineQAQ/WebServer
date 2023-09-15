@@ -31,3 +31,33 @@ system:
     k: 100000
     v: 111
     w: 212
+
+class:
+  person:
+    name: constantineqaq
+    age: 21
+    sex: true
+  map:
+    constantineqaq1:
+      name: constantineqaq01
+      age: 20
+      sex: false
+    constantineqaq2:
+      name: constantineqaq02
+      age: 22
+      sex: true
+  vec_map:
+    k1:
+      - name: m1
+        age: 33
+        sex: true
+      - name: m2
+        age: 32
+        sex: false
+    k2:
+      - name: m21
+        age: 33
+        sex: true
+      - name: m22
+        age: 32
+        sex: false
