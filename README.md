@@ -61,8 +61,7 @@ LexicalCast;
 当一个配置项发生修改的时候，可以反向通知对应的代码，回调
 
 # 日志系统整合配置系统
-## 顶层类图
-![类图](/resources/UML图.png) 
+![顶层类图](/resources/UML图.png) 
 ```yaml
 logs:
     - name: root 
