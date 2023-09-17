@@ -1,10 +1,10 @@
 #ifndef CONSTANTINEQAQ_CONFIG_H
 #define CONSTANTINEQAQ_CONFIG_H
 
+#include "log.h"
 #include <memory>
 #include <string>
 #include <sstream>
-#include "log.h"
 #include <yaml-cpp/yaml.h>
 #include <boost/lexical_cast.hpp>
 #include <list>
@@ -327,8 +327,8 @@ public:
     static typename ConfigVar<T>::ptr Lookup(const std::string& name
             , const T& default_value
             , const std::string& description = ""){
-        auto it = s_datas.find(name);
-        if(it != s_datas.end()){
+        auto it = GetDatas().find(name);
+        if(it != GetDatas().end()){
             auto tmp = std::dynamic_pointer_cast<ConfigVar<T>>(it->second);
             if(tmp){
                 CONSTANTINEQAQ_LOG_INFO(CONSTANTINEQAQ_LOG_ROOT()) << "Lookup name = " << name << " exists";
@@ -345,14 +345,14 @@ public:
             throw std::invalid_argument(name);
         }
         typename ConfigVar<T>::ptr v(new ConfigVar<T>(name, default_value, description));
-        s_datas[name] = v;
+        GetDatas()[name] = v;
         return v;
     }
 
     template<class T>
     static typename ConfigVar<T>::ptr Lookup(const std::string& name){
-        auto it = s_datas.find(name);
-        if(it == s_datas.end()){
+        auto it = GetDatas().find(name);
+        if(it == GetDatas().end()){
             return nullptr;
         }
         return std::dynamic_pointer_cast<ConfigVar<T>>(it->second);
@@ -362,7 +362,10 @@ public:
     // 查找配置项，返回配置项的基类
     static ConfigVarBase::ptr LookupBase(const std::string& name);
 private:
-    static ConfigVarMap s_datas;
+    static ConfigVarMap& GetDatas(){
+        static ConfigVarMap s_datas;
+        return s_datas;
+    }
 };
 }
 #endif // !CONSTANTINEQAQ_CONFIG_H

@@ -1,6 +1,7 @@
 #include "../include/log.h"
 #include "../include/config.h"
 #include <yaml-cpp/yaml.h>
+#include <iostream>
 
 ConstantineQAQ::ConfigVar<int>::ptr g_int_value_config = 
     ConstantineQAQ::Config::Lookup("system.port", (int)8080, "system port");
@@ -48,7 +49,7 @@ void print_yaml(const YAML::Node& node, int level) {
 }
 
 void test_yaml(){
-    YAML::Node root = YAML::LoadFile("/home/ConstantineQAQ/workspace/webserver/bin/conf/log.yml");
+    YAML::Node root = YAML::LoadFile("/home/ConstantineQAQ/workspace/webserver/bin/conf/test.yml");
     print_yaml(root,0);
 }
 
@@ -78,7 +79,7 @@ void test_config(){
     XX(g_int_unordered_set_value_config, int_unordered_set, before);
     XX_M(g_str_int_map_value_config, str_int_map, before);
     XX_M(g_str_int_unordered_map_value_config, str_int_unordered_map, before);
-    YAML::Node root = YAML::LoadFile("/home/ConstantineQAQ/workspace/webserver/bin/conf/log.yml");
+    YAML::Node root = YAML::LoadFile("/home/ConstantineQAQ/workspace/webserver/bin/conf/test.yml");
     ConstantineQAQ::Config::LoadFromYaml(root);
     std::cout << "---------------------------------------------------------" << std::endl;
     XX(g_int_vec_value_config, int_vec, after);
@@ -176,9 +177,26 @@ void test_class(){
 
 }
 
+void test_log(){
+    static ConstantineQAQ::Logger::ptr system_log = CONSTANTINEQAQ_LOG_NAME("system");
+    CONSTANTINEQAQ_LOG_INFO(system_log) << "hello system" << std::endl;
+    std::cout << ConstantineQAQ::LoggerMgr::GetInstance()->toYamlString() << std::endl;
+    YAML::Node root = YAML::LoadFile("/home/ConstantineQAQ/workspace/webserver/bin/conf/log.yml");
+    ConstantineQAQ::Config::LoadFromYaml(root);
+    std::cout << "===============================================" << std::endl;
+    std::cout << ConstantineQAQ::LoggerMgr::GetInstance()->toYamlString() << std::endl;
+    std::cout << "===============================================" << std::endl;
+    std::cout << root << std::endl;
+    CONSTANTINEQAQ_LOG_INFO(system_log) << "hello system" << std::endl;
+
+    system_log->setFormatter("%d - %m%n");
+    CONSTANTINEQAQ_LOG_INFO(system_log) << "hello system" << std::endl;
+}
+
 int main(int argc, char** argv){
     // test_config();
     // test_yaml();
-    test_class();
+    // test_class();
+    test_log();
     return 0;
 }

@@ -1,3 +1,7 @@
 2023-09-12 21:30:27	4978	<<error_format %N>>	0	[INFO]	[root]	/home/ConstantineQAQ/workspace/webserver/tests/test.cpp:36	xsadadadasdxx
 2023-09-12 21:30:27	4978	<<error_format %N>>	0	[DEBUG]	[root]	/home/ConstantineQAQ/workspace/webserver/tests/test.cpp:37	xsadadadasdxx
 2023-09-12 21:30:27	4978	<<error_format %N>>	0	[INFO]	[root]	/home/ConstantineQAQ/workspace/webserver/tests/test.cpp:38	xsadadadasdyy
+2023-09-16 22:39:20	12617	0	[INFO]	[xx]	tests/test.cpp:36	xsadadadasdxx
+2023-09-16 22:39:20	12617	0	[DEBUG]	[xx]	tests/test.cpp:37	xsadadadasdxx
+2023-09-16 22:47:36	15183	0	[INFO]	[xx]	tests/test.cpp:36	xsadadadasdxx
+2023-09-16 22:47:36	15183	0	[DEBUG]	[xx]	tests/test.cpp:37	xsadadadasdxx
