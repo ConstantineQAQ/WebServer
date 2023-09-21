@@ -60,7 +60,7 @@ LexicalCast;
 配置的事件机制
 当一个配置项发生修改的时候，可以反向通知对应的代码，回调
 
-# 日志系统整合配置系统
+### 日志系统整合配置系统
 ![顶层类图](/resources/UML图.png) 
 ```yaml
 logs:
@@ -92,14 +92,30 @@ static Logger::ptr g_log = CONSTANTINEQAQ_LOG_NAME("system");
 
 使用processon画图，画出类的关系图，类的关系图，类的继承关系图，类的组合关系图，类的依赖关系图
 
-## 3.协程库的封装
+## 3.线程库
+
+Thread, Mutex
+Pthread
+
+pthread pthread_create
+
+互斥量 mutex
+信号量 semaphore
+
+和log整合
+Logger, Appender, Formatter
+
+Spinlock,替换了Mutex
+写文件，周期性reopen，防止当文件被删除，占用句柄，磁盘空间没有释放。
+
+## 4.协程库的封装
 将异步的操作封装成协程，使用协程的方式来进行异步操作
 
-## 4.socket函数库的开发
+## 5.socket函数库的开发
 
-## 5.http协议的开发
+## 6.http协议的开发
 
-## 6.分布式协议
+## 7.分布式协议
 逻辑业务分离，将业务逻辑分离到不同的服务器上，通过分布式协议来进行通信，将业务功能和系统功能分割开来，提高系统的可扩展性和可维护性
 
-## 7.推荐系统
+## 8.推荐系统
