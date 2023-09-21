@@ -15,6 +15,7 @@
     #include <stdarg.h>
     #include "util.h"
     #include "singleton.h"
+    #include "thread.h"
 
     #define CONSTANTINEQAQ_LOG_LEVEL(logger, level) \
         if(logger->getLevel() <= level) \
@@ -174,17 +175,19 @@
     friend class Logger;
     public:
         typedef std::shared_ptr<LogAppender> ptr;
+        typedef Spinlock MutexType;
         virtual ~LogAppender() {};
 
         virtual void Log(std::shared_ptr<Logger> logger, LogLevel::Level level, LogEvent::ptr event) = 0;
         virtual std::string toYamlString() = 0;
         void setFormatter(LogFormatter::ptr val);
-        LogFormatter::ptr getFormatter() const { return m_formatter; }
+        LogFormatter::ptr getFormatter();
         LogLevel::Level getLevel() const { return m_level; }
         void setLevel(LogLevel::Level val) { m_level = val; }
     protected:
         LogLevel::Level m_level = LogLevel::DEBUG;
         bool m_hasFormatter = false;
+        MutexType m_mutex;
         LogFormatter::ptr m_formatter;
     };
 
@@ -193,6 +196,8 @@
     friend class LoggerManager;
     public:
         typedef std::shared_ptr<Logger> ptr;
+        typedef Spinlock MutexType;
+
         Logger(const std::string& name = "root");
         void Log(LogLevel::Level level, LogEvent::ptr event);
         void Debug(LogEvent::ptr event);
@@ -217,6 +222,7 @@
     private:
         std::string m_name;             // 日志名称
         LogLevel::Level m_level;        // 日志级别
+        MutexType m_mutex;
         LogFormatter::ptr m_formatter;  // 日志格式
         std::list<LogAppender::ptr> m_appenders;    // 日志输出地集合
         Logger::ptr m_root;             // 主日志器
@@ -243,6 +249,7 @@
     private:
         std::string m_filename;
         std::ofstream m_filestream;
+        uint64_t m_lastTime = 0;
     };
 
     // 日志器管理类
@@ -250,12 +257,15 @@
     public:
         LoggerManager();
         typedef std::shared_ptr<LoggerManager> ptr;
+        typedef Spinlock MutexType;
+
         Logger::ptr getLogger(const std::string& name);
         void init();
         Logger::ptr getRoot() const { return m_root; }
         
         std::string toYamlString();
     private:
+        MutexType m_mutex;
         std::map<std::string, Logger::ptr> m_loggers;
         Logger::ptr m_root;
     };

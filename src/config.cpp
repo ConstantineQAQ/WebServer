@@ -4,6 +4,7 @@ namespace ConstantineQAQ{
 
 ConfigVarBase::ptr ConstantineQAQ::Config::LookupBase(const std::string &name)
 {
+    RWMutexType::ReadLock lock(GetMutex());
     auto it = GetDatas().find(name);
     return it == GetDatas().end() ? nullptr : it->second;
 }
@@ -29,27 +30,37 @@ static void ListAllMember(const std::string& prefix,
     }
                           }
 
-void Config::LoadFromYaml(const YAML::Node& root){
+void Config::LoadFromYaml(const YAML::Node& root) {
     std::list<std::pair<std::string, const YAML::Node> > all_nodes;
     ListAllMember("", root, all_nodes);
 
-    for(auto& i : all_nodes){
+    for(auto& i : all_nodes) {
         std::string key = i.first;
-        if(key.empty()){
+        if(key.empty()) {
             continue;
         }
+
         std::transform(key.begin(), key.end(), key.begin(), ::tolower);
         ConfigVarBase::ptr var = LookupBase(key);
 
-        if(var){
-            if(i.second.IsScalar()){
+        if(var) {
+            if(i.second.IsScalar()) {
                 var->fromString(i.second.Scalar());
-            }else{
+            } else {
                 std::stringstream ss;
                 ss << i.second;
                 var->fromString(ss.str());
             }
         }
+    }
+}
+
+void Config::Visit(std::function<void(ConfigVarBase::ptr)> cb) {
+    RWMutexType::ReadLock lock(GetMutex());
+    ConfigVarMap& m = GetDatas();
+    for(auto it = m.begin();
+            it != m.end(); ++it) {
+        cb(it->second);
     }
 }
 }

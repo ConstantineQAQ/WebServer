@@ -152,7 +152,7 @@ ConstantineQAQ::ConfigVar<std::map<std::string, Person>>::ptr g_person_map =
 ConstantineQAQ::ConfigVar<std::map<std::string, std::vector<Person> > >::ptr g_person_vec_map = 
     ConstantineQAQ::Config::Lookup("class.vec_map", std::map<std::string, std::vector<Person>>(), "system person");
 
-void test_class(){
+/* void test_class(){
     CONSTANTINEQAQ_LOG_INFO(CONSTANTINEQAQ_LOG_ROOT()) << "before: " << g_person->getValue().tostring() << " - " << g_person->toString();
     #define XX_PM(g_var, prefix) \
         { \
@@ -175,7 +175,7 @@ void test_class(){
     XX_PM(g_person_map, "class.map after");
     CONSTANTINEQAQ_LOG_INFO(CONSTANTINEQAQ_LOG_ROOT()) << "after: " << g_person_vec_map->toString();
 
-}
+} */
 
 void test_log(){
     static ConstantineQAQ::Logger::ptr system_log = CONSTANTINEQAQ_LOG_NAME("system");
@@ -198,5 +198,11 @@ int main(int argc, char** argv){
     // test_yaml();
     // test_class();
     test_log();
+    ConstantineQAQ::Config::Visit([](ConstantineQAQ::ConfigVarBase::ptr var) {
+        CONSTANTINEQAQ_LOG_INFO(CONSTANTINEQAQ_LOG_ROOT()) << "name=" << var->getName()
+            << " description=" << var->getDescription()
+            << " typename=" << var->getTypeName()
+            << " value=" << var->toString();
+        });
     return 0;
 }
