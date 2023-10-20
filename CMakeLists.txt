@@ -10,6 +10,7 @@ include_directories(.)
 
 set(LIB_SRC
     src/log.cpp
+    src/fiber.cpp
     src/util.cpp
     src/config.cpp
     src/thread.cpp
@@ -47,6 +48,10 @@ add_dependencies(test_thread constantineQAQ)
 force_redefine_file_macro_for_sources(test_thread) # __FILE__
 target_link_libraries(test_thread constantineQAQ ${LIB_LIB})
 
+add_executable(test_util tests/test_util.cpp)
+add_dependencies(test_util constantineQAQ)
+force_redefine_file_macro_for_sources(test_util) # __FILE__
+target_link_libraries(test_util constantineQAQ ${LIB_LIB})
 
 SET(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/lib)
 SET(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/bin)
