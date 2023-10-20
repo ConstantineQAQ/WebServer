@@ -110,6 +110,16 @@ Spinlock,替换了Mutex
 
 ## 4.协程库的封装
 将异步的操作封装成协程，使用协程的方式来进行异步操作
+定义协程接口,ucontext_t, macro方便调试
+
+```
+Thread->main_fiber <------> sub_fiber
+            ^
+            |
+            v
+        sub_fiber
+```
+
 
 ## 5.socket函数库的开发
 

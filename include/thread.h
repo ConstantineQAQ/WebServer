@@ -1,6 +1,7 @@
 #ifndef __THREAD_H__
 #define __THREAD_H__
 
+#include <string>
 #include <thread>
 #include <functional>
 #include <memory>
