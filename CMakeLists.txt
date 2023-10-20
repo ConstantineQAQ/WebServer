@@ -53,5 +53,10 @@ add_dependencies(test_util constantineQAQ)
 force_redefine_file_macro_for_sources(test_util) # __FILE__
 target_link_libraries(test_util constantineQAQ ${LIB_LIB})
 
+add_executable(test_fiber tests/test_fiber.cpp)
+add_dependencies(test_fiber constantineQAQ)
+force_redefine_file_macro_for_sources(test_fiber) # __FILE__
+target_link_libraries(test_fiber constantineQAQ ${LIB_LIB})
+
 SET(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/lib)
 SET(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/bin)
